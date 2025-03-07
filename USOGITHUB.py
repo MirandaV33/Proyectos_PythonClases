@@ -33,3 +33,8 @@ git push -u origin main
 
 
 ##Actualizar archivos en git
+git status          # Verifica los archivos modificados
+git add .           # Agrega todos los archivos al área de preparación
+git commit -m "mensaje de cambios"  # Realiza el commit
+git push -u origin main   # Sube los cambios al repositorio remoto
+

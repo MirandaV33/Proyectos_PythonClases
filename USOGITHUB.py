@@ -23,3 +23,13 @@ git remote remove origin
 
 ## ¿Como agrego archivos desde mi repositorio local? 
 
+git init 
+cd ##DIRECCIONCARPETAENQUEESTAELARCHIVO
+git add ##Nombredelarchivo
+git add . 
+git status 
+git commit -m "Agregar archivo al repositorio"
+git push -u origin main 
+
+
+##Actualizar archivos en git

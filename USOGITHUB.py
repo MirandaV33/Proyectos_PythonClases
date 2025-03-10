@@ -44,6 +44,8 @@ git push -u origin main
 
 
 ##Actualizar archivos en git
+git init 
+cd ##DIRECCIONCARPETAENQUEESTAELARCHIVO
 git status          # Verifica los archivos modificados
 git add .           # Agrega todos los archivos al área de preparación
 git commit -m "mensaje de cambios"  # Realiza el commit

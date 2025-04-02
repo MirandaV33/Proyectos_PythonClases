@@ -67,12 +67,31 @@ q =  Vf/2**(B-1) # paso de cuantización de q Volts
 
 # datos del ruido (potencia de la señal normalizada, es decir 1 W). Nos interesa que la potencia sea 1W porque en dB es mas facil de medir. 
 #Genera una distribucion de puntos con desviacion estandar normalizada, igual a 1. 
-pot_ruido_cuant = (q**(2))/12  # Watts 
+pot_ruido_cuant = (q**(2))/12  # Watts  --> es en realidad la VARIANZA del error de cuantizacion
+#!!! Potencia de ruido= varianza de cuantizacion!
 kn = 1. # escala de la potencia de ruido analógico
+#Relacion ruido analogico y de cuantizacion, ajusta cuánta potencia de ruido se considera en la señal analógica antes de la digitalización.
 pot_ruido_analog = pot_ruido_cuant * kn 
+
+#Si el ruido analógico es muy alto, el ruido de cuantización tiene un impacto menor en el resultado final,
+#ya que el ruido analógico puede "dominar" sobre el ruido de cuantización. Si el ruido analógico es bajo o despreciable, 
+#el ruido de cuantización será más notable y afectará más a la calidad de la señal digitalizada.
+
+#Aca podemos hablar del PISO DE RUIDO. El piso de ruido (o ruido de fondo) es el nivel mínimo de señal de ruido que se 
+#puede detectar en un sistema de medición. Generalmente esta relacionado con el piso analogico, ya que TODA señal analogica tiene
+# asociado algun grado de ruido de diferentes fuentes. 
+#La potencia de ruido se puede entender como una medida de la cantidad de ruido presente en un sistema, 
+#y su relación con el piso de ruido se da a través de la densidad espectral de potencia. El piso de ruido está
+#relacionado con la potencia de ruido total en el sistema, y si el ruido analógico tiene mayor potencia que el
+# ruido de cuantización, entonces el impacto del ruido de cuantización en la señal digitalizada será menor.
+
+#Si en el modelo que estás utilizando  kn (que es el factor de escala de la potencia del ruido analógico) es grande, 
+#eso significa que el ruido analógico tiene más potencia y puede dominar sobre el ruido de cuantización. En cambio, si kn es pequeño (casi 0), el ruido analógico es muy bajo, y el ruido de cuantización será más importante.
 
 ts = 1/fs # tiempo de muestreo
 df =  fs/N # resolución espectral
+
+
 
 
 
@@ -96,8 +115,12 @@ df =  fs/N # resolución espectral
 analog_sig = xx/np.std(xx)# señal analógica sin ruido
 nn = np.random.normal(0, np.sqrt(pot_ruido_analog), N) # señal de ruido de analógico
 sr = analog_sig + nn # señal analógica de entrada al ADC (con ruido analógico)
+
 #Divido por q, redondeo y después multiplico por q. 
 srq = np.round(sr/q)*q # señal cuantizada
+# Esto o que hace es dividir la señal en q escalones, y luego redondea cada punto a un escalon q cercano. Este proceso comprende el error de redondeo lo cual nos da una señal con RUIDO
+
+
 #Parametros: sr/q valores de entrada, 0 para que sean 0 decimales, y N valores de salida
 nq =  srq -sr # señal de ruido de cuantización, señal cuantizada menos el ruido de cuantizacion
 
@@ -185,6 +208,8 @@ axes_hdl.legend()
 #############
 # Histograma
 #############
+
+#El histrograma tiene como proposito mostrar la distribucion de los pasos de cuantizacion. 
 
 plt.figure(3)
 bins = 10

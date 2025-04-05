@@ -163,7 +163,6 @@ def mi_funcion_sen (vmax, dc, ff, ph, nn, fs):
     return tt, xx
 #%% Datos de la simulacion 
 
-
 #Datos para el muestreo (sampleo)
 fs = 1000 # frecuencia de muestreo (Hz) conviene numero entero conocido 
 N = 1000 # cantidad de muestras
@@ -560,65 +559,32 @@ plt.title( 'Ruido de cuantización para {:d} bits - $\pm V_R= $ {:3.1f} V - q = 
 plt.xlabel('Pasos de cuantización (q) [V]')
 
 #%% Simular elaliasing 
+
 #%% Datos de la simulacion 
 
 #Datos para el muestreo (sampleo)
-fs = 1000 # frecuencia de muestreo (Hz) conviene numero entero conocido 
+fs = 2 # frecuencia de muestreo (Hz) conviene numero entero conocido 
 N = 1000 # cantidad de muestras
- 
-
-#Proceso de CUANTIFICACION
-# Datos del ADC
-B = 4  # bits
-Vf = 2 # rango simétrico de +/- Vf Volts
-q =  Vf/2**(B-1) # paso de cuantización de q Volts
-
-#Generacion de ruido
-pot_ruido_cuant = (q**(2))/12  # Watts 
-kn = 1 # escala de la potencia de ruido analógico
-pot_ruido_analog = pot_ruido_cuant * kn 
 
 ts = 1/fs # tiempo de muestreo
 df =  fs/N # resolución espectral
 
 # %% Llamada a la función y procesamiento
-tt, xx = mi_funcion_sen(vmax=2, dc=0, ff=1001, ph=0, nn=N, fs=fs)
-
-# Normalizamos la función con el desvío estándar
-xn = xx / np.std(xx)
-print(xn)
-#De esta manera, la varianza es unitaria, y la potencia de 1W
-
-#%% Experimento 
-
-# Señal analogica
-analog_sig = xn
-
-#Generacion de ruido analogico aleatorio
-nn = np.random.normal(0, np.sqrt(pot_ruido_analog), N)
-
-#Señal analogica con ruido 
-sr = analog_sig + nn 
-
-
-#Señal cuantizada con ruido
-srq = np.round(sr/q)*q 
-
-#Ruido de cuantizacion
-nq =  srq -sr 
+tt, xx = mi_funcion_sen(vmax=2, dc=0, ff=5, ph=0, nn=N, fs=fs)
 
 #%% Graficar los resultados
 
-plt.figure(14)
+plt.figure(1)
 
-# Señales 
-plt.plot(tt, sr, label='Señal analógica con ruido', color= 'black', linewidth=1)
-plt.vlines(tt, ymin=0, ymax=srq, colors='r', linestyles='dotted', label='Muestreo')
+# Señal original (señal continua a 300 Hz)
+plt.plot(tt, xx, label='Señal de 5hz, frecuencia de muestreo 3Hz, y N=100', color= 'red', linewidth=2)
 
 # Títulos y etiquetas
-plt.title('Simulación de Aliasing y muestreo')
+plt.title('Simulación de Aliasing')
 plt.xlabel('Tiempo [s]')
 plt.ylabel('Amplitud')
 plt.legend()
 plt.grid(True)
 plt.show()
+
+

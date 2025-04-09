@@ -582,7 +582,7 @@ ts = 1/fs # tiempo de muestreo
 df =  fs/N # resolución espectral
 
 # %% Llamada a la función y procesamiento
-tt, xx = mi_funcion_sen(vmax=2, dc=0, ff=1001, ph=0, nn=N, fs=fs)
+tt, xx = mi_funcion_sen(vmax=2, dc=0, ff=500, ph=0, nn=N, fs=fs)
 
 # Normalizamos la función con el desvío estándar
 xn = xx / np.std(xx)

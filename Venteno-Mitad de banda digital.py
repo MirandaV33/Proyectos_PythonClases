@@ -70,7 +70,6 @@ ft_xwn = 1/N * np.fft.fft(xwn)
 
 # grilla de sampleo frecuencial
 ff = np.linspace(0, (N-1)*df, N)
-
 bfrec = ff <= fs/2 #Vector de n valores que hace que me quede con LA MITAD el vector, nos devuelve un verdadero o falso segun la condicion 
 
 plt.plot(ff[bfrec], 10 * np.log10(2 * np.abs(ft_xn[bfrec])**2), label="Señal original", color='orange')

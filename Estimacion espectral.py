@@ -10,7 +10,7 @@ Created on Thu Apr  3 20:07:37 2025
 import numpy as np
 from scipy import signal
 from scipy.fft import fft, fftshift
-import matplotlib.pyplot as pltw
+import matplotlib.pyplot as plt
 
 #%% Datos de la simulacion, definicion de constantes
 

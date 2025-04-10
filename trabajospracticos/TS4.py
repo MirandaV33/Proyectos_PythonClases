@@ -110,31 +110,33 @@ for snr_db in SNRs:
     # Calculo el estimador de potencia P=1/N*mod[ft_xw]^2
     X_xxabs= np.abs(ft_xx)
     P_est= 1/N * (X_xxabs)**2  # [1000, 200]
-    Pmax_est= np.argmax(P_est, axis=0)  # [200] → una potencia maxima para una frecuencia por realización. 
-    omega1_est = freqs[Pmax_est]  
+    omega1_est= np.argmax(P_est, axis=0)  # [200] → una potencia maxima para una frecuencia por realización. 
+
     
     #Calculo del estimador frecuencial de brithann 
     # Calculo el estimador de potencia P=1/N*mod[ft_xw]^2
     X_xwabs1= np.abs(ft_xw)
     P_est1= 1/N * (X_xwabs1)**2  # [1000, 200]
-    Pmax_est1= np.argmax(P_est1, axis=0)  # [200] → una potencia maxima para una frecuencia por realización. 
-    omega2_est = freqs[Pmax_est1] 
+    omega2_est= np.argmax(P_est1, axis=0)  # [200] → una potencia maxima para una frecuencia por realización. 
+    
     
     #Calculo el estimador frecuencial de blackmanharris
     # Calculo el estimador de potencia P=1/N*mod[ft_xw]^2
     X_xwabs2= np.abs(ft_xw2)
     P_est2= 1/N * (X_xwabs2)**2  # [1000, 200]
-    Pmax_est2= np.argmax(P_est2, axis=0)  # [200] → una potencia maxima para una frecuencia por realización. 
-    omega3_est = freqs[Pmax_est2] 
+    omega3_est= np.argmax(P_est2, axis=0)  # [200] → una potencia maxima para una frecuencia por realización. //Argumento que MAXIMIZA el modulo de la transformada 
+    
     
     #Calculo el estimador frecuencial de flattop
     # Calculo el estimador de potencia P=1/N*mod[ft_xw]^2
     X_xwabs3= np.abs(ft_xw3)
     P_est3= 1/N * (X_xwabs3)**2  # [1000, 200]
-    Pmax_est3= np.argmax(P_est3, axis=0)  # [200] → una potencia maxima para una frecuencia por realización. 
-    omega4_est = freqs[Pmax_est3] 
+    omega4_est = np.argmax(P_est3, axis=0)  # [200] → una potencia maxima para una frecuencia por realización. //Axis=0 hace que  
     
-
+    #Calculo el sesgo 
+    
+    
+    
     ###HISTOGRAMA###
     plt.figure()
     plt.hist(omega1_est, bins=10, color='red', alpha=0.5, label="Estimador sin ventanear")

@@ -89,46 +89,70 @@ for snr_db in SNRs:
     #Estimador---> en N/4 de la matriz xx  es 
     
     
-    # Estimador sin ventanear
-    a1_est= np.abs(ft_xx)  # [1000, 200]
-    a1_est_max = np.max(a1_est, axis=0) 
+    # # Estimador sin ventanear
+    a1_est= np.abs(ft_xx[N//4, :])  # [1000, 200] // Division entera
+    # a1_est_max = np.max(a1_est, axis=0) 
     
     
-    # Estimador ventana barthann
-    a1_est2= np.abs(ft_xx)  # [1000, 200]
-    a1_est_max2 = np.max(a1_est2, axis=0) 
+    # # Estimador ventana barthann
+    a1_est2= np.abs(ft_xw[N//4, : ])  # [1000, 200]
+    # a1_est_max2 = np.max(a1_est2, axis=0) 
     
-    # Estimador ventana blackmanharris
-    a1_est3= np.abs(ft_xx)  # [1000, 200]
-    a1_est_max3 = np.max(a1_est3, axis=0) 
+    # # Estimador ventana blackmanharris
+    a1_est3= np.abs(ft_xw2[N//4, :])  # [1000, 200]
+    # a1_est_max3 = np.max(a1_est3, axis=0) 
     
-    # Estimador  ventana flattop
-    a1_est4= np.abs(ft_xx)  # [1000, 200]
-    a1_est_max4 = np.max(a1_est4, axis=0) 
+    # # Estimador  ventana flattop
+    a1_est4= np.abs(ft_xw3[N//4, :])  # [1000, 200]
+    # a1_est_max4 = np.max(a1_est4, axis=0) 
     
-    
+    #Calculo el estimador frecuencial sin ventana
     # Calculo el estimador de potencia P=1/N*mod[ft_xw]^2
-    X_xwabs= np.abs(ft_xw)
-    P_est= 1/N * (X_xwabs)**2  # [1000, 200]
-    
-    #Calculo el estimador frecuencial 
+    X_xxabs= np.abs(ft_xx)
+    P_est= 1/N * (X_xxabs)**2  # [1000, 200]
     Pmax_est= np.argmax(P_est, axis=0)  # [200] → una potencia maxima para una frecuencia por realización. 
-    omega1_est = freqs[Pmax_est]  #
+    omega1_est = freqs[Pmax_est]  
+    
+    #Calculo del estimador frecuencial de brithann 
+    # Calculo el estimador de potencia P=1/N*mod[ft_xw]^2
+    X_xwabs1= np.abs(ft_xw)
+    P_est1= 1/N * (X_xwabs1)**2  # [1000, 200]
+    Pmax_est1= np.argmax(P_est1, axis=0)  # [200] → una potencia maxima para una frecuencia por realización. 
+    omega2_est = freqs[Pmax_est1] 
+    
+    #Calculo el estimador frecuencial de blackmanharris
+    # Calculo el estimador de potencia P=1/N*mod[ft_xw]^2
+    X_xwabs2= np.abs(ft_xw2)
+    P_est2= 1/N * (X_xwabs2)**2  # [1000, 200]
+    Pmax_est2= np.argmax(P_est2, axis=0)  # [200] → una potencia maxima para una frecuencia por realización. 
+    omega3_est = freqs[Pmax_est2] 
+    
+    #Calculo el estimador frecuencial de flattop
+    # Calculo el estimador de potencia P=1/N*mod[ft_xw]^2
+    X_xwabs3= np.abs(ft_xw3)
+    P_est3= 1/N * (X_xwabs3)**2  # [1000, 200]
+    Pmax_est3= np.argmax(P_est3, axis=0)  # [200] → una potencia maxima para una frecuencia por realización. 
+    omega4_est = freqs[Pmax_est3] 
+    
 
- 
     ###HISTOGRAMA###
-    # plt.figure()
-    # plt.hist(omega1_est, bins=30, color='skyblue', edgecolor='k')
-    # plt.title("Histograma de frecuencias estimadas (200 realizaciones)- SNR {} dB".format(snr_db))
-    # plt.xlabel("Frecuencia [Hz]")
-    # plt.ylabel("Potencia")
-    # plt.grid(True)
+    plt.figure()
+    plt.hist(omega1_est, bins=10, color='red', alpha=0.5, label="Estimador sin ventanear")
+    plt.hist(omega2_est, bins=10, color='green',alpha=0.5, label="Estimador ventana barthann")
+    plt.hist(omega3_est, bins=10, color='blue',alpha=0.5, label="Estimador ventana blackmanharris")
+    plt.hist(omega4_est, bins=10, color='pink', alpha=0.5, label="Estimador ventana flattop")
+    plt.title("Histograma de frecuencias estimadas (200 realizaciones)- SNR {} dB".format(snr_db))
+    plt.xlabel("Frecuencia [Hz]")
+    plt.ylabel("Cantidad de ocurrencias")
+    plt.grid(True)
+    plt.legend()
     
     plt.figure()
-    plt.hist(a1_est_max, bins=30, color='red', alpha=0.5)
-    plt.hist(a1_est_max2, bins=30, color='green', alpha=0.5)
-    plt.hist(a1_est_max3, bins=30, color='blue', alpha=0.5)
-    plt.hist(a1_est_max4, bins=30, color='pink', alpha=0.5)
+    plt.hist(a1_est, bins=10, color='red', alpha=0.5, label="Estimador sin ventanear") #Bins: resolucion espectral del histograma; conteo relativo. ANCHURA de los valores.
+    plt.hist(a1_est2, bins=10, color='green', alpha=0.5, label="Estimador ventana barthann")
+    plt.hist(a1_est3, bins=10, color='blue', alpha=0.5, label="Estimador ventana blackmanharris")
+    plt.hist(a1_est4, bins=10, color='pink', alpha=0.5, label="Estimador ventana flattop")
+    plt.legend()
 
     plt.title("Histograma de amplitudes estimadas - SNR {} dB".format(snr_db))
     plt.xlabel("Amplitud estimada")
@@ -150,6 +174,4 @@ for snr_db in SNRs:
     
 plt.show()
 
-
-#%% Visualizacion de resultdos 
 

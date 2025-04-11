@@ -139,11 +139,10 @@ axes_hdl.legend()
 
 plt.figure(3)
 bins = 10
-plt.hist(nq.flatten()/(q), bins=bins)
-plt.plot( np.array([-1/2, -1/2, 1/2, 1/2]), np.array([0, N/bins, N/bins, 0]), '--r' )
+plt.hist(nq.flatten(), bins=bins)
 plt.title( 'Ruido de cuantización para {:d} bits - $\pm V_R= $ {:3.1f} V - q = {:3.3f} V'.format(B, Vf, q))
 
-plt.xlabel('Pasos de cuantización (q) [V]')
+plt.xlabel('Error de cuantización (q) [V]')
 
 #%% ADC 4 BITS KN=1/10
 #%% Funciones a importar
@@ -277,11 +276,10 @@ axes_hdl.legend()
 
 plt.figure(6)
 bins = 10
-plt.hist(nq.flatten()/(q), bins=bins)
-plt.plot( np.array([-1/2, -1/2, 1/2, 1/2]), np.array([0, N/bins, N/bins, 0]), '--r' )
+plt.hist(nq.flatten(), bins=bins)
 plt.title( 'Ruido de cuantización para {:d} bits - $\pm V_R= $ {:3.1f} V - q = {:3.3f} V'.format(B, Vf, q))
 
-plt.xlabel('Pasos de cuantización (q) [V]')
+plt.xlabel('Error de cuantización (q) [V]')
 
 #%% ADC 8 BITS KN=1
 #%% Funciones a importar
@@ -414,11 +412,10 @@ axes_hdl.legend()
 
 plt.figure(9)
 bins = 10
-plt.hist(nq.flatten()/(q), bins=bins)
-plt.plot( np.array([-1/2, -1/2, 1/2, 1/2]), np.array([0, N/bins, N/bins, 0]), '--r' )
+plt.hist(nq.flatten(), bins=bins)
 plt.title( 'Ruido de cuantización para {:d} bits - $\pm V_R= $ {:3.1f} V - q = {:3.3f} V'.format(B, Vf, q))
 
-plt.xlabel('Pasos de cuantización (q) [V]')
+plt.xlabel('Error de cuantización (q) [V]')
 
 
 #%% ADC 16 BITS KN=10
@@ -553,11 +550,10 @@ axes_hdl.legend()
 
 plt.figure(12)
 bins = 10
-plt.hist(nq.flatten()/(q), bins=bins)
-plt.plot( np.array([-1/2, -1/2, 1/2, 1/2]), np.array([0, N/bins, N/bins, 0]), '--r' )
+plt.hist(nq.flatten(), bins=bins)
 plt.title( 'Ruido de cuantización para {:d} bits - $\pm V_R= $ {:3.1f} V - q = {:3.3f} V'.format(B, Vf, q))
 
-plt.xlabel('Pasos de cuantización (q) [V]')
+plt.xlabel('Error de cuantización (q) [V]')
 
 #%% Simular elaliasing 
 #%% Datos de la simulacion 

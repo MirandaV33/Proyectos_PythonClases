@@ -58,6 +58,9 @@ xx = S + nn
 
 #Transformada
 
-
-
 ###Tarea: agregarle las ventanas!
+
+
+# TIPS CLASES:
+    # Zero padding: Agregar ceros al final de tu señal antes de aplicar la FFT. No cambia la resolución en tiempo, pero sí interpola la FFT, permitiéndote una mejor estimación de frecuencia (no es magia, pero ayuda).
+    

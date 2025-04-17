@@ -21,8 +21,7 @@ import matplotlib.pyplot as plt
 
 def estimador_omega(f_t, N, df):
     FT_abs = np.abs(f_t[:N//2, :])
-    P_est = (1/N) * (FT_abs ** 2)
-    omega_est = np.argmax(P_est, axis=0) * df
+    omega_est = np.argmax(FT_abs, axis=0) * df
     return omega_est
 
 #%% Datos de la simulacion, definicion de constantes
@@ -119,10 +118,10 @@ for snr_db in SNRs:
     
     #Calculo el estimador frecuencial (sin zero paddning)
     # CON ZERO PADDING
-    # omega1_est_pp = estimador_omega(ft_xx_pp, N, df_pp)
-    # omega2_est_pp = estimador_omega(ft_xw_pp, N, df_pp)
-    # omega3_est_pp = estimador_omega(ft_xw2_pp, N, df_pp)
-    # omega4_est_pp = estimador_omega(ft_xw3_pp, N, df_pp)
+    omega1_est_pp = estimador_omega(ft_xx_pp, N, df_pp)
+    omega2_est_pp = estimador_omega(ft_xw_pp, N, df_pp)
+    omega3_est_pp = estimador_omega(ft_xw2_pp, N, df_pp)
+    omega4_est_pp = estimador_omega(ft_xw3_pp, N, df_pp)
     
     # BONUS – SIN ZERO PADDING
     omega1_est = estimador_omega(ft_xx, N, df)
@@ -215,16 +214,16 @@ for snr_db in SNRs:
     plt.grid(True)
     plt.legend()
     
-    # plt.figure()
-    # plt.hist(omega1_est_pp, bins=30, color='red', alpha=0.5, label="Estimador sin ventanear")
-    # plt.hist(omega2_est_pp, bins=30, color='green',alpha=0.5, label="Estimador ventana barthann")
-    # plt.hist(omega3_est_pp, bins=30, color='blue',alpha=0.5, label="Estimador ventana blackmanharris")
-    # plt.hist(omega4_est_pp, bins=30, color='pink', alpha=0.5, label="Estimador ventana flattop")
-    # plt.title("Histograma de frecuencias estimadas (200 realizaciones)- SNR {} dB (zero padding)".format(snr_db))
-    # plt.xlabel("Frecuencia [Hz]")
-    # plt.ylabel("Cantidad de ocurrencias")
-    # plt.grid(True)
-    # plt.legend()
+    plt.figure()
+    plt.hist(omega1_est_pp, bins=30, color='red', alpha=0.5, label="Estimador sin ventanear")
+    plt.hist(omega2_est_pp, bins=30, color='green',alpha=0.5, label="Estimador ventana barthann")
+    plt.hist(omega3_est_pp, bins=30, color='blue',alpha=0.5, label="Estimador ventana blackmanharris")
+    plt.hist(omega4_est_pp, bins=30, color='pink', alpha=0.5, label="Estimador ventana flattop")
+    plt.title("Histograma de frecuencias estimadas (200 realizaciones)- SNR {} dB (zero padding)".format(snr_db))
+    plt.xlabel("Frecuencia [Hz]")
+    plt.ylabel("Cantidad de ocurrencias")
+    plt.grid(True)
+    plt.legend()
     
     plt.figure()
     plt.hist(a1_est, bins=10, color='red', alpha=0.5, label="Estimador sin ventanear") #Bins: resolucion espectral del histograma; conteo relativo. ANCHURA de los valores.
@@ -252,9 +251,15 @@ plt.show()
 
 #%% BONUS
 
+def estimador_omega2(f_t, N, df):
+    FT_abs = np.abs(f_t[:N//2, :])
+    P_est = (1/N) * (FT_abs ** 2)
+    omega_est = np.argmax(P_est, axis=0) * df
+    return omega_est
+
 # ## --> Estimador de amplitud alternativo 
 a1_est= np.abs(ft_xx)  # [1000, 200] // Division entera
 a1_est_max = np.max(a1_est, axis=0) 
 # ## --> Estimador de frecuencia espectral  alternaitvo
-omega_est_alternativo = np.argmax(a1_est, axis=0) * df  
+
 

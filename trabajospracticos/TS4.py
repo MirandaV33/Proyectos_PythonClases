@@ -117,11 +117,11 @@ for snr_db in SNRs:
     a1_est4= np.abs(ft_xw3[N//4, :])  # [1000, 200]
     
     #Calculo el estimador frecuencial (sin zero paddning)
-    # CON ZERO PADDING
-    omega1_est_pp = estimador_omega(ft_xx_pp, N, df_pp)
-    omega2_est_pp = estimador_omega(ft_xw_pp, N, df_pp)
-    omega3_est_pp = estimador_omega(ft_xw2_pp, N, df_pp)
-    omega4_est_pp = estimador_omega(ft_xw3_pp, N, df_pp)
+    #CON ZERO PADDING
+    omega1_est_pp = estimador_omega(ft_xx_pp, N2, df_pp)
+    omega2_est_pp = estimador_omega(ft_xw_pp, N2, df_pp)
+    omega3_est_pp = estimador_omega(ft_xw2_pp, N2, df_pp)
+    omega4_est_pp = estimador_omega(ft_xw3_pp, N2, df_pp)
     
     # BONUS – SIN ZERO PADDING
     omega1_est = estimador_omega(ft_xx, N, df)

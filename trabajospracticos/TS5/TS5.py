@@ -81,6 +81,8 @@ ecg_one_lead= ecg_one_lead / np.std(ecg_one_lead)
 
 f_ecg_r, Pxx_ecg_r = sig.welch(ecg_one_lead_r, fs_ecg, nfft=N1, window='hann', nperseg=N1//6, axis=0)
 f_ecg, Pxx_ecg = sig.welch(ecg_one_lead, fs_ecg, nfft=N2, window='hann', nperseg=N2//6, axis=0)
+print(np.max(Pxx_ecg_r))
+print(np.max(Pxx_ecg))
 
 # %%Visualizacion de resultados 
 
@@ -192,7 +194,7 @@ f_ppg, Pxx_ppg = sig.welch(ppg, fs_ppg, nfft=Np, window='hann', nperseg=Np//6, a
 
 ###Señal Temporal###
 plt.figure()  
-plt.plot(ppg)
+plt.plot(ppg[0:1000])
 plt.title("PPG: Pletismografía")
 
 ### Estrectro ###

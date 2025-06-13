@@ -8,7 +8,6 @@ Created on Mon Jun  9 20:26:27 2025
 
 #%% Librerias
 
-import sympy as sp
 import numpy as np
 import scipy.signal as sig
 import matplotlib.pyplot as plt
@@ -113,15 +112,13 @@ fpass = np.array([1.0, 35.0]) #Hz
 fstop = np.array([.1, 50.]) # Hz
 
 plt.figure(figsize=(10, 6))
-plot_plantilla(filter_type="bandpass", fpass=fpass, ripple=ripple, fstop=fstop, attenuation=attenuation, fs=fs)
-ax = plt.gca()
-
 plt.title('Plantilla de Diseño de Filtro Pasabanda para ECG')
 plt.xlabel('Frecuencia [Hz]')
 plt.ylabel('Amplitud [dB]')
 plt.legend()
+plot_plantilla(filter_type="bandpass", fpass=fpass, ripple=ripple, fstop=fstop, attenuation=attenuation, fs=fs)
+ax = plt.gca()
 plt.show()
-
 
 #%%  Diseños de filtros
 
@@ -170,6 +167,7 @@ Filtro_Ventana = sig.firwin2(numtaps=2505, freq=freq, gain=gain, window='hamming
 # Cuadrados mínimos--> Requerimiento asimetric en frecuencia
 # Opcion 1: Concatenar un pasa altos y un pasa bajos
 # Opcion 2: cambiar la banda de paso! Hacerla simetrica 
+
 numtaps_ls= 1505
 Filtro_LS = sig.firls(numtaps_ls, freq, gain, fs=fs)
 
@@ -222,7 +220,7 @@ for nombre, sos in zip(nombres_filtros, filtros_i):
     plt.show()
 
 # Regiones sin ruido (convertidas de minutos a muestras)
-regs_sin_ruido = (
+regs_con_ruido = (
     np.array([5, 5.2]) * 60 * fs,
     np.array([12, 12.4]) * 60 * fs,
     np.array([15, 15.2]) * 60 * fs,
@@ -231,10 +229,10 @@ regs_sin_ruido = (
 demora = 0
 
 for nombre, ecg_filt in ecgs_filtrados.items():
-    fig, axs = plt.subplots(1, len(regs_sin_ruido), figsize=(18, 5), sharey=True)
+    fig, axs = plt.subplots(1, len(regs_con_ruido), figsize=(18, 5), sharey=True)
     axs = axs.flatten()
     
-    for i, reg in enumerate(regs_sin_ruido):
+    for i, reg in enumerate(regs_con_ruido):
         plt.sca(axs[i])
         plot_regions(ecg_one_lead, ecg_filt, [reg], demora, label=nombre, crear_figura=False)
         axs[i].set_title(f'{nombre} - Región {i+1}')
@@ -248,18 +246,18 @@ for nombre, ecg_filt in ecgs_filtrados.items():
 
 
 # Regiones con ruido
-regs_ruido = (
+regs_sin_ruido = (
     [4000, 5500],
     [10000, 11000],
 )
-demora2=67
+demora2=80
 
 
 for nombre, ecg_filt in ecgs_filtrados.items():
-    fig, axs = plt.subplots(1, len(regs_ruido), figsize=(12, 5), sharey=True)
+    fig, axs = plt.subplots(1, len(regs_sin_ruido), figsize=(12, 5), sharey=True)
     axs = axs.flatten()
     
-    for i, reg in enumerate(regs_ruido):
+    for i, reg in enumerate(regs_sin_ruido):
         plt.sca(axs[i])
         plot_regions(ecg_one_lead, ecg_filt, [reg], demora2, label=nombre, crear_figura=False)
         axs[i].set_title(f'{nombre} - Región ruido {i+1}')
@@ -278,7 +276,7 @@ ecgs_filtrados_fir = {}
 nombres_filtros = ['Ventanas', 'Cuadrados Minimos']
 
 for nombre, filtro in filtros_fir.items():
-    ecg_filt = sig.lfilter(filtro, 1.0, ecg_one_lead)  # FIR usa lfilter
+    ecg_filt = sig.sosfilt(filtros_fir, ecg_one_lead)  # FIR usa lfilter
     ecgs_filtrados_fir[nombre] = ecg_filt
     plt.figure() 
     plt.plot(ecg_one_lead, label= 'Señal sin filtrar')
@@ -290,20 +288,20 @@ for nombre, filtro in filtros_fir.items():
     plt.legend()
     plt.show()
 
-# Regiones sin ruido (convertidas de minutos a muestras)
-regs_sin_ruido = (
+# Regiones con ruido (convertidas de minutos a muestras)
+regs_con_ruido = (
     np.array([5, 5.2]) * 60 * fs,
     np.array([12, 12.4]) * 60 * fs,
     np.array([15, 15.2]) * 60 * fs,
 )
 
-demora = 67
+demora = 0
 
 for nombre, ecg_filt in ecgs_filtrados_fir.items():
-    fig, axs = plt.subplots(1, len(regs_sin_ruido), figsize=(18, 5), sharey=True)
+    fig, axs = plt.subplots(1, len(regs_con_ruido), figsize=(18, 5), sharey=True)
     axs = axs.flatten()
     
-    for i, reg in enumerate(regs_sin_ruido):
+    for i, reg in enumerate(regs_con_ruido):
         plt.sca(axs[i])
         plot_regions(ecg_one_lead, ecg_filt, [reg], demora, label=nombre, crear_figura=False)
         axs[i].set_title(f'{nombre} - Región {i+1}')
@@ -311,13 +309,13 @@ for nombre, ecg_filt in ecgs_filtrados_fir.items():
         axs[i].set_ylabel('Amplitud')
         axs[i].grid(True)
 
-    plt.suptitle(f'{nombre} - Regiones SIN ruido', fontsize=16)
+    plt.suptitle(f'{nombre} - Regiones con ruido', fontsize=16)
     plt.tight_layout(rect=[0, 0, 1, 0.95])
     plt.show()
 
 
 # Regiones con ruido
-regs_ruido = (
+regs__sin_ruido = (
     [4000, 5500],
     [10000, 11000],
 )
@@ -325,10 +323,10 @@ demora2=0
 
 
 for nombre, ecg_filt in ecgs_filtrados_fir.items():
-    fig, axs = plt.subplots(1, len(regs_ruido), figsize=(12, 5), sharey=True)
+    fig, axs = plt.subplots(1, len(regs__sin_ruido), figsize=(12, 5), sharey=True)
     axs = axs.flatten()
     
-    for i, reg in enumerate(regs_ruido):
+    for i, reg in enumerate(regs__sin_ruido):
         plt.sca(axs[i])
         plot_regions(ecg_one_lead, ecg_filt, [reg], demora2, label=nombre, crear_figura=False)
         axs[i].set_title(f'{nombre} - Región ruido {i+1}')
@@ -336,7 +334,7 @@ for nombre, ecg_filt in ecgs_filtrados_fir.items():
         axs[i].set_ylabel('Amplitud')
         axs[i].grid(True)
 
-    plt.suptitle(f'{nombre} - Regiones CON ruido', fontsize=16)
+    plt.suptitle(f'{nombre} - Regiones sin ruido', fontsize=16)
     plt.tight_layout(rect=[0, 0, 1, 0.95])
     plt.show()
     

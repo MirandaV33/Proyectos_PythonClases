@@ -36,12 +36,7 @@ N1 = len(ecg_one_lead)
 ecg_one_lead_r = ecg_one_lead / np.std(ecg_one_lead)
 
 
-#%% Filtros IIR
-# Metodos de aproximacion 
-aprox_name = 'butter'
-# aprox_name = 'cheby1'
-# aprox_name = 'cheby2'
-# aprox_name = 'ellip' cower
+
 
 #%% Datos de plantilla 
 
@@ -53,15 +48,15 @@ ripple = 1.0 # dB
 fstop = np.array([.1, 50.]) # Hz
 attenuation = 40 # dB
 
-#%% Diseño del filtro IIR
-
 mi_sos=sig.iirdesign(fpass, fstop, ripple, attenuation, ftype=aprox_name, output= 'sos', fs=fs)
 # Graficos de salida (output) tipo sos, significa que  devuelve el filtro en formato de secciones de segundo orden
 #Filtro de orden 28--> 14 pares de polos y ceros.
-
-
-#%% Diseño de Plantilla 
-
+#%% Filtros IIR
+# Metodos de aproximacion 
+aprox_name = 'butter'
+# aprox_name = 'cheby1'
+# aprox_name = 'cheby2'
+# aprox_name = 'ellip' cower
 npoints = 1000
 
 w, hh = sig.sosfreqz(mi_sos, worN=npoints) #w es los valores a los que le calculo los complejos --> hh 
@@ -86,7 +81,7 @@ plot_plantilla(filter_type = "bandpass" , fpass = fpass, ripple = ripple , fstop
 plt.legend()
 plt.show()
 
-#%% Filtrado de la señal 
+# Filtrado de la señal 
 
 ecg_filt= sig.sosfilt(mi_sos, ecg_one_lead_r) # ---> Aplica el filtro en una sola dirección. Introduce retardo de grupo y distorsión de fase.
 ecg_filt2= sig.sosfiltfilt(mi_sos, ecg_one_lead_r) #---> Aplica el filtro hacia adelante y luego hacia atrás. Esto corrige la distorsión de fase y el retardo de grupo, pero duplica la atenuación y el rizado. 
@@ -94,7 +89,7 @@ cant_muestras= len(ecg_filt)
 cant_muestras2= len(ecg_filt2)
 
 
-# %%Visualizacion resultados
+# Visualizacion resultados
 ###SEÑAL TEMPORAL###
 
 #Sin filtrar
@@ -135,7 +130,7 @@ plt.show()
 #El rippple esta relacionado al maximo de la señal, por lo que pasa 1-->2 dB
 # Filt--> Distorsion de fase 
 
-#%% Regiones de interes: Esta parte del código te permite hacer un "zoom" en segmentos 
+#Regiones de interes: Esta parte del código te permite hacer un "zoom" en segmentos 
 # específicos de la señal de ECG para poder observar de cerca el efecto de los filtros. 
 
 regs_interes = ( 

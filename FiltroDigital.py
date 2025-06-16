@@ -21,6 +21,7 @@ from scipy.interpolate import CubicSpline
 from pytc2.sistemas_lineales import plot_plantilla
 
 #%% Señal ECG
+#%% Filtrado Lineal
 
 # Tenemos componentes de baja frecuencias que generan interferencia! Por sistemas electricos tenemos interferencia de 50Hz 
 # Tambien tenemos interferencia de alta frecuencia por el ruido muscular electrico!

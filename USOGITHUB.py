@@ -7,6 +7,7 @@ Created on Fri Mar  7 09:57:08 2025
 ##Conectar cuenta de github
 git config --global user.name "(usuario)"
 git config --global user.email "(mail)"
+git config --list
 ##Vincular carpeta
 cd ##Nombredelacarpeta
 git init
@@ -51,3 +52,25 @@ git add .           # Agrega todos los archivos al área de preparación
 git commit -m "mensaje de cambios"  # Realiza el commit
 git push -u origin main   # Sube los cambios al repositorio remoto
 
+
+# Creando una nueva rama!
+git checkout -b nombre-de-la-branch
+git branch nombre-de-la-branch
+
+# Para cambiar de rama 
+git switch nombre-de-la-branch
+
+# Para ver historial de commits
+git log --oneline
+
+# Ver cambios en el arhivo 
+git diff
+
+#Restaurar una version anterior 
+git log --onleline #Para ver cambiar 
+git restore --source [hash][archivo] #(numero unico de commit)
+
+#Juntar dos ramas:
+git merge nombre-de-la-branch 
+git log --online
+git push origin main 

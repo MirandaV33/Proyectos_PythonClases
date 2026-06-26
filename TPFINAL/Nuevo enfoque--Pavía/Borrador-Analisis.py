@@ -129,6 +129,14 @@ print(f"La frecuencia de muestreo calculada es: {fs:.2f} Hz")
 ancho_banda= fs/2
 print(f"El ancho de banda del Ethanol es: {ancho_banda:.2f} Hz")
 
+#%% 
+diferencias_tiempo = np.diff(df1.iloc[:, 0].values)
+plt.plot(diferencias_tiempo)
+plt.title("Variabilidad del tiempo de muestreo (dt)")
+plt.ylabel("diferencia de tiempo (s)")
+plt.show()
+
+
 #%%Observo el espectro de frecuencia 
 t = df1.iloc[:, 0] 
 v = df1.iloc[:, 1]
@@ -285,12 +293,6 @@ print(f"Amplitud medida Regimen 2: {ampfreq_lenta:.2f} V")
 print(f"Desvío estándar  Regimen 1: {stdfreq_rapida:.2f} V")
 print(f"Desvío estándar Regimen 2: {stdfreq_lenta:.2f} V")
 
-#%% Sospecho que la frecuencia de uestrei NO es estable grafico
-diferencias_tiempo = np.diff(df1.iloc[:, 0].values)
-plt.plot(diferencias_tiempo)
-plt.title("Variabilidad del tiempo de muestreo (dt)")
-plt.ylabel("diferencia de tiempo (s)")
-plt.show()
 #%% Observo los dos regimenes por separado 
 
 #%% Regimen alto, puedo hacer fft porque tengo una sinusoidal con armonicos,en el lento por otor lado no. Es una señal escalonada con estados estacionarios la fft no funciona
@@ -433,13 +435,15 @@ def analizar_toda_la_señal(df):
     i = df.iloc[:, 2].values
     v = df.iloc[:, 1].values
     
-    # 1. Detectar flancos (igual que antes)
-    flancos = np.where((v[1:] > v[:-1] + 0.5))[0]
+    #Quiero analizar el efecto capacitivo de la corriente en cada subida de volttaje, por lo que identifico dos flacos: subida y bajada
+    flancos_positivos = np.where((v[1:] > 140) & (v[:-1] < 140))[0]
+    flancos_negativos = np.where((v[1:] < -140) & (v[:-1] > -140))[0]
+    flancos = np.sort(np.concatenate([flancos_positivos, flancos_negativos]))
     
     picos = []
     estacionarios = []
     
-    #Como mi dt no es constante, necesito determinar ventanas para detectar los picos!
+    #Como mi dt no es constante, necesito determinar ventanas para detectar los picos ya que no puedo confiar en mi dt! Etsablezco para probar: ajustar segun resultados
     ventana_pico = 0.05  
     ventana_ss_inicio = 0.1 
     ventana_ss_fin = 0.3    
@@ -447,7 +451,7 @@ def analizar_toda_la_señal(df):
     for idx in flancos:
         t_inicio = tiempo[idx]
         idx_pico_fin = np.searchsorted(tiempo, t_inicio + ventana_pico)
-        idx_ss_inicio = np.searchsorted(tiempo, t_inicio + ventana_ss_inicio)
+        idx_ss_inicio = np.searchsorted(tiempo, t_inicio + ventana_ss_inicio) 
         idx_ss_fin = np.searchsorted(tiempo, t_inicio + ventana_ss_fin)
         if idx_ss_fin < len(i):
             picos.append(np.max(i[idx:idx_pico_fin]))
@@ -466,7 +470,6 @@ def analizar_toda_la_señal(df):
     
     return i_peak_promedio, i_ss_promedio, snr, factor_forma, std_ruido_global
 
-# Y lo llamás así:
 i_peak, i_ss, snr, factor, ruido = analizar_toda_la_señal(df1)
 print(f"Pico Promedio: {i_peak:.4f}, SNR: {snr:.2f}, Factor: {factor:.4f}")
 

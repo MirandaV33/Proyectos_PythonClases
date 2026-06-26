@@ -1,0 +1,33 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Jun 23 11:05:35 2026
+
+@author: l
+"""
+
+import cv2 as cv
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+from scipy.signal import stft, welch
+from scipy.interpolate import interp1d
+from scipy import signal
+from pytc2.sistemas_lineales import plot_plantilla 
+from scipy.signal import welch
+
+#%% 
+def cargar_mediciones(ruta):
+    df_raw = pd.read_csv(ruta, sep='\t')
+    diccionario_mediciones = {}
+    
+    for i, nombre in enumerate(['Medicion_1', 'Medicion_2', 'Medicion_3']):
+        bloque = df_raw.iloc[:, i*4 : (i*4)+4]
+        df_limpio = pd.DataFrame({
+            'Time': bloque.iloc[:, 0],
+            'Voltage': bloque.iloc[:, 1],
+            'Current': bloque.iloc[:, 3]
+        }).dropna()
+        
+        diccionario_mediciones[nombre] = df_limpio
+        
+    return diccionario_mediciones
